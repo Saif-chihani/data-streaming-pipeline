@@ -1,37 +1,37 @@
-# 📊 Métriques et Performance
+# 📊 Metrics and Performance
 
-## 🎯 Objectifs vs Réalisations
+## 🎯 Objectives vs Achievements
 
-| Requirement | Objectif | Réalisé | Status |
+| Requirement | Target | Achieved | Status |
 |-------------|----------|---------|--------|
-| Latence Redis | < 5 secondes | < 2 secondes | ✅ DÉPASSÉ |
-| Exactly-Once | Garanti | Implémenté avec Kafka transactions | ✅ |
+| Redis Latency | < 5 seconds | < 2 seconds | ✅ EXCEEDED |
+| Exactly-Once | Guaranteed | Implemented with Kafka transactions | ✅ |
 | Fan-out Multi-sink | 3 destinations | Redis + BigQuery + External | ✅ |
-| Backfill | Supporté | Implémenté avec mode batch | ✅ |
-| Monitoring | Requis | API complète + Prometheus | ✅ |
-| Containerization | Docker | Docker Compose complet | ✅ |
-| Documentation | Complète | FR + AR + Demo guides | ✅ |
+| Backfill | Supported | Implemented with batch mode | ✅ |
+| Monitoring | Required | Complete API + Prometheus | ✅ |
+| Containerization | Docker | Complete Docker Compose | ✅ |
+| Documentation | Complete | EN + API docs + Demo guides | ✅ |
 
-## 📈 Métriques de Performance
+## 📈 Performance Metrics
 
-### Débit
-- **Production** : 1,000+ événements/seconde
-- **Backfill** : 10,000+ événements/seconde
-- **Latence moyenne** : 150ms end-to-end
+### Throughput
+- **Production**: 1,000+ events/second
+- **Backfill**: 10,000+ events/second
+- **Average Latency**: 150ms end-to-end
 
-### Disponibilité
-- **Uptime cible** : 99.9%
-- **Health checks** : Toutes les 30 secondes
-- **Auto-recovery** : Retry avec backoff exponentiel
+### Availability
+- **Target Uptime**: 99.9%
+- **Health Checks**: Every 30 seconds
+- **Auto-recovery**: Retry with exponential backoff
 
-### Ressources
-- **RAM recommandée** : 8GB
-- **CPU** : 4 cores minimum
-- **Stockage** : 20GB pour démo
+### Resources
+- **Recommended RAM**: 8GB
+- **CPU**: 4 cores minimum
+- **Storage**: 20GB for demo
 
-## 🏗️ Architecture Technique
+## 🏗️ Technical Architecture
 
-### Stack Technologique
+### Technology Stack
 ```yaml
 Backend: Python 3.11+
 Streaming: Apache Kafka 7.4.0
@@ -43,14 +43,14 @@ Monitoring: FastAPI + Prometheus
 Validation: Pydantic
 ```
 
-### Patterns Implémentés
-- **Event Sourcing** : Tous les événements sont immutables
-- **CQRS** : Séparation lecture/écriture
-- **Circuit Breaker** : Protection contre les pannes
-- **Saga Pattern** : Transactions distribuées
-- **Observer Pattern** : Monitoring et alerting
+### Implemented Patterns
+- **Event Sourcing**: All events are immutable
+- **CQRS**: Separation of read/write operations
+- **Circuit Breaker**: Protection against failures
+- **Saga Pattern**: Distributed transactions
+- **Observer Pattern**: Monitoring and alerting
 
-## 🔄 Flow de Données
+## 🔄 Data Flow
 
 ```mermaid
 graph TD
@@ -67,11 +67,11 @@ graph TD
     I --> L[Prometheus Export]
 ```
 
-## 🛡️ Garanties et Fiabilité
+## 🛡️ Guarantees and Reliability
 
 ### Exactly-Once Processing
 ```python
-# Implémentation avec Kafka Transactions
+# Implementation with Kafka Transactions
 @transactional
 async def process_event(event):
     async with kafka_transaction():
@@ -87,52 +87,52 @@ async def process_event(event):
 Redis: 3 retries, exponential backoff
 BigQuery: 5 retries, 60s max delay  
 External: 3 retries, circuit breaker
-Kafka: Infinite retries avec DLQ
+Kafka: Infinite retries with DLQ
 ```
 
 ## 📊 Monitoring Dashboard
 
-### Métriques Clés
-- `events_processed_total` : Compteur total d'événements
-- `processing_latency_seconds` : Histogramme des latences
-- `error_rate` : Taux d'erreur par sink
-- `queue_depth` : Profondeur des queues
+### Key Metrics
+- `events_processed_total`: Total event counter
+- `processing_latency_seconds`: Latency histogram
+- `error_rate`: Error rate by sink
+- `queue_depth`: Queue depth
 
 ### Alerting
 ```yaml
-High Error Rate: > 1% sur 5 minutes
-High Latency: > 5 secondes Redis
+High Error Rate: > 1% over 5 minutes
+High Latency: > 5 seconds Redis
 Service Down: Health check failed
-Queue Backup: > 1000 messages en attente
+Queue Backup: > 1000 messages waiting
 ```
 
-## 🧪 Tests et Validation
+## 🧪 Testing and Validation
 
-### Tests Unitaires
+### Unit Tests
 ```bash
 pytest tests/ -v --cov=src/
 ```
 
-### Tests d'Intégration
+### Integration Tests
 ```bash
 docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 ```
 
-### Tests de Charge
+### Load Tests
 ```bash
-# 10,000 événements en 1 minute
+# 10,000 events in 1 minute
 docker exec data_generator python stress_test.py --events 10000 --duration 60
 ```
 
-## 📅 Roadmap Technique
+## 📅 Technical Roadmap
 
-### Phase 1 - Actuelle ✅
-- [x] Streaming temps réel
+### Phase 1 - Current ✅
+- [x] Real-time streaming
 - [x] Exactly-once processing
 - [x] Multi-sink fan-out
-- [x] Monitoring basique
+- [x] Basic monitoring
 
-### Phase 2 - Optimisations 🚧
+### Phase 2 - Optimizations 🚧
 - [ ] Schema Registry
 - [ ] Kafka Streams
 - [ ] Auto-scaling
@@ -146,4 +146,4 @@ docker exec data_generator python stress_test.py --events 10000 --duration 60
 
 ---
 
-**💡 Ce projet démontre une maîtrise complète des architectures de streaming modernes !**
+**💡 This project demonstrates complete mastery of modern streaming architectures!**

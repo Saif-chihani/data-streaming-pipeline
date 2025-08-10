@@ -164,7 +164,7 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
-        extra = "ignore"  # Ignore les champs supplémentaires
+        extra = "ignore"  # Ignore additional fields
 
 
 # Global settings instance
