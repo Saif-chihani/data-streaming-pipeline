@@ -339,10 +339,10 @@ docker-compose restart stream-processor
 ## 🔗 المستودع
 
 ```bash
-git clone https://github.com/seifchihani/data-streaming-pipeline.git
+git clone https://github.com/Saif-chihani/data-streaming-pipeline.git
 ```
 
-**الرابط**: [https://github.com/seifchihani/data-streaming-pipeline](https://github.com/seifchihani/data-streaming-pipeline)
+**الرابط**: [https://github.com/Saif-chihani/data-streaming-pipeline](https://github.com/Saif-chihani/data-streaming-pipeline)
 
 ## 📄 الترخيص
 
@@ -365,7 +365,7 @@ git clone https://github.com/seifchihani/data-streaming-pipeline.git
 4. Check health: `curl http://localhost:8080/health`
 
 ### التعليمات بالعربية
-1. استنساخ المستودع: `git clone https://github.com/seifchihani/data-streaming-pipeline.git`
+1. استنساخ المستودع: `git clone https://github.com/Saif-chihani/data-streaming-pipeline.git`
 2. الانتقال للمشروع: `cd data-streaming-pipeline`
 3. تشغيل الخدمات: `docker-compose up -d`
 4. فحص الصحة: `curl http://localhost:8080/health`

@@ -6,7 +6,7 @@ Ce guide vous permet de tester le pipeline en 5 minutes !
 
 ```bash
 # 1. Cloner le projet
-git clone https://github.com/seifchihani/data-streaming-pipeline.git
+git clone https://github.com/Saif-chihani/data-streaming-pipeline.git
 cd data-streaming-pipeline
 
 # 2. Lancer tout d'un coup
