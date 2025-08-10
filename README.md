@@ -1,63 +1,61 @@
-# Pipeline de Streaming de Données en Temps Réel
+# Real-Time Data Streaming Pipeline
 
-**Auteur :** Saif Eddine Chihani  
-**Date :** 10 Août 2025  
-**Candidature :** Ingénieur de Données Senior  
-**GitHub :** [data-streaming-pipeline](https://github.com/Saif-chihani/data-streaming-pipeline)
+**Author:** Saif Eddine Chihani  
+**Date:** August 10, 2025  
+**Position:** Senior Data Engineer  
+**Repository:** [data-streaming-pipeline](https://github.com/Saif-chihani/data-streaming-pipeline)
 
 ---
 
-## Vue d'Ensemble
+## Overview
 
-Ce projet implémente une solution complète de streaming de données en temps réel pour le traitement d'événements d'engagement utilisateur. La solution répond aux exigences strictes de latence, de débit et de fiabilité pour un environnement de production.
+This project implements a complete real-time data streaming solution for processing user engagement events. The system meets strict requirements for latency, throughput, and reliability in a production environment.
 
-### Objectifs Métier
+### Business Objectives
 
-Le système capture et traite les interactions utilisateur sur une plateforme de contenu multimédia (vidéos, podcasts, newsletters) pour :
+The system captures and processes user interactions on a multimedia content platform (videos, podcasts, newsletters) to:
 
-- **Analyser l'engagement** : Calcul automatique des métriques de consommation de contenu
-- **Alimenter les systèmes downstream** : Distribution vers Redis, BigQuery et API externes  
-- **Garantir la fiabilité** : Processing exactly-once avec gestion des pannes
-- **Optimiser les performances** : Latence sub-5-secondes pour les agrégations temps réel
+- **Analyze engagement**: Automatic calculation of content consumption metrics
+- **Feed downstream systems**: Distribution to Redis, BigQuery, and external APIs  
+- **Ensure reliability**: Exactly-once processing with failure handling
+- **Optimize performance**: Sub-5-second latency for real-time aggregations
 
-## Architecture Technique
-
-### Vue d'Ensemble du Système
+## System Architecture
 
 ```
-PostgreSQL (Source) → Kafka Topic → Stream Processor → Fan-out Multi-sink
-                                         ↓
-                           ┌─────────────┼─────────────┐
-                           ↓             ↓             ↓
-                        Redis      BigQuery    External API
-                    (Temps réel)  (Analytics)   (Intégration)
+PostgreSQL → Kafka → Stream Processor → Multi-sink Distribution
+                           ↓
+              ┌────────────┼────────────┐
+              ↓            ↓            ↓
+           Redis      BigQuery    External API
+        (Real-time)  (Analytics)  (Integration)
 ```
 
-### Composants Principaux
+### Core Components
 
-| Composant | Technologie | Rôle |
-|-----------|-------------|------|
-| **Source Database** | PostgreSQL 15 | Base de données principale avec tables `content` et `engagement_events` |
-| **Message Broker** | Apache Kafka | Transport fiable des événements avec garanties de livraison |
-| **Stream Processor** | Python 3.11 | Application principale avec enrichissement et transformation |
-| **Cache Temps Réel** | Redis 7 | Agrégations et métriques en temps réel (< 5 secondes) |
-| **Data Warehouse** | Google BigQuery | Stockage et analytics pour requêtes complexes |
-| **API Gateway** | FastAPI | Interface REST pour monitoring et intégrations |
+| Component | Technology | Role |
+|-----------|------------|------|
+| **Source Database** | PostgreSQL 15 | Main database with `content` and `engagement_events` tables |
+| **Message Broker** | Apache Kafka | Reliable event transport with delivery guarantees |
+| **Stream Processor** | Python 3.11 | Main application with enrichment and transformation |
+| **Real-time Cache** | Redis 7 | Aggregations and metrics in real-time (< 5 seconds) |
+| **Data Warehouse** | Google BigQuery | Storage and analytics for complex queries |
+| **API Gateway** | FastAPI | REST interface for monitoring and integrations |
 
-### Technologies Utilisées
+### Technology Stack
 
-- **Langage Principal** : Python 3.11+
-- **Orchestration** : Docker Compose
+- **Primary Language**: Python 3.11+
+- **Orchestration**: Docker Compose
 - **Validation de Données** : Pydantic v2
-- **Logging** : Structlog avec format JSON
-- **Monitoring** : Prometheus + métriques custom
-- **Tests** : pytest avec couverture complète
+- **Logging**: Structlog with JSON format
+- **Monitoring**: Prometheus + custom metrics
+- **Testing**: pytest with full coverage
 
-## Modèle de Données
+## Data Model
 
-### Tables Source (PostgreSQL)
+### Source Tables (PostgreSQL)
 
-**Table `content` - Catalogue de contenu**
+**Table `content` - Content catalog**
 ```sql
 CREATE TABLE content (
     id              UUID PRIMARY KEY,
@@ -69,7 +67,7 @@ CREATE TABLE content (
 );
 ```
 
-**Table `engagement_events` - Événements d'interaction**
+**Table `engagement_events` - User interaction events**
 ```sql
 CREATE TABLE engagement_events (
     id           BIGSERIAL PRIMARY KEY,
@@ -83,19 +81,19 @@ CREATE TABLE engagement_events (
 );
 ```
 
-### Transformations de Données
+### Data Transformations
 
-Pour chaque événement, le système effectue automatiquement :
+For each event, the system automatically performs:
 
-- **Enrichissement** : Jointure avec les métadonnées de contenu
-- **Calcul d'engagement** : 
+- **Enrichment**: Join with content metadata
+- **Engagement calculation**: 
   - `engagement_seconds = duration_ms / 1000`
   - `engagement_percentage = (engagement_seconds / length_seconds) * 100`
-- **Validation** : Contrôle de cohérence et détection d'anomalies
+- **Validation**: Consistency checks and anomaly detection
 
-### Exemple de Transformation
+### Transformation Example
 
-**Événement brut :**
+**Raw event:**
 ```json
 {
   "content_id": "123e4567-e89b-12d3-a456-426614174000",
@@ -106,7 +104,7 @@ Pour chaque événement, le système effectue automatiquement :
 }
 ```
 
-**Événement enrichi :**
+**Enriched event:**
 ```json
 {
   "content_id": "123e4567-e89b-12d3-a456-426614174000",
@@ -122,68 +120,68 @@ Pour chaque événement, le système effectue automatiquement :
 }
 ```
 
-## Distribution Multi-Sink
+## Multi-Sink Distribution
 
-### 1. Redis (Temps Réel)
-- **Objectif** : Agrégations instantanées (< 5 secondes)
-- **Structures** : Hash sets pour top content, compteurs pour métriques globales
-- **Cas d'usage** : Dashboards temps réel, recommandations dynamiques
+### 1. Redis (Real-Time)
+- **Purpose**: Instant aggregations (< 5 seconds)
+- **Data structures**: Hash sets for top content, counters for global metrics
+- **Use cases**: Real-time dashboards, dynamic recommendations
 
 ### 2. BigQuery (Analytics)
-- **Objectif** : Requêtes analytiques complexes
-- **Format** : Tables partitionnées par date avec clustering
-- **Cas d'usage** : Rapports mensuels, analyses de cohortes, machine learning
+- **Purpose**: Complex analytical queries
+- **Format**: Date-partitioned tables with clustering
+- **Use cases**: Monthly reports, cohort analysis, machine learning
 
-### 3. API Externe (Intégrations)
-- **Objectif** : Synchronisation avec systèmes tiers
-- **Protocol** : REST API avec authentification bearer token
-- **Cas d'usage** : CRM, systèmes de recommandation, notifications
+### 3. External API (Integrations)
+- **Purpose**: Synchronization with third-party systems
+- **Protocol**: REST API with bearer token authentication
+- **Use cases**: CRM, recommendation systems, notifications
 
-## Performances et Garanties
+## Performance and Guarantees
 
-### Métriques de Performance
+### Performance Metrics
 
-| Métrique | Objectif | Atteint |
-|----------|----------|---------|
-| **Latence Redis** | < 5 secondes | ✅ 2.3s moyens |
-| **Débit Production** | 1000+ evt/sec | ✅ 1500+ evt/sec |
-| **Débit Backfill** | 5000+ evt/sec | ✅ 8000+ evt/sec |
+| Metric | Target | Achieved |
+|--------|--------|----------|
+| **Redis Latency** | < 5 seconds | ✅ 2.3s average |
+| **Production Throughput** | 1000+ evt/sec | ✅ 1500+ evt/sec |
+| **Backfill Throughput** | 5000+ evt/sec | ✅ 8000+ evt/sec |
 | **Availability** | 99.9% | ✅ 99.95% |
 
-### Garanties de Fiabilité
+### Reliability Guarantees
 
-- **Exactly-Once Processing** : Transactions Kafka avec offsets manuels
-- **Idempotence** : Clés uniques sur tous les sinks avec upsert
-- **Retry Policy** : Backoff exponentiel avec dead letter queues
-- **Circuit Breaker** : Protection contre les défaillances en cascade
+- **Exactly-Once Processing**: Kafka transactions with manual offsets
+- **Idempotence**: Unique keys on all sinks with upsert operations
+- **Retry Policy**: Exponential backoff with dead letter queues
+- **Circuit Breaker**: Protection against cascading failures
 
-## Installation et Déploiement
+## Installation and Deployment
 
-### Prérequis
+### Prerequisites
 
-- Docker 24+ et Docker Compose v2
-- 8GB RAM minimum, 16GB recommandés
-- Compte Google Cloud avec BigQuery activé (optionnel pour tests)
+- Docker 24+ and Docker Compose v2
+- 8GB RAM minimum, 16GB recommended
+- Google Cloud account with BigQuery enabled (optional for testing)
 
-### Configuration Rapide
+### Quick Setup
 
 ```bash
-# 1. Cloner le repository
+# 1. Clone repository
 git clone https://github.com/Saif-chihani/data-streaming-pipeline.git
 cd data-streaming-pipeline
 
-# 2. Configuration environnement
+# 2. Environment configuration
 cp .env.example .env
-# Éditer .env avec vos paramètres
+# Edit .env with your parameters
 
-# 3. Démarrage des services
+# 3. Start services
 docker-compose up --build -d
 
-# 4. Validation du système
+# 4. System validation
 ./quick-test.sh
 ```
 
-### Variables d'Environnement
+### Environment Variables
 
 ```bash
 # PostgreSQL
@@ -204,82 +202,82 @@ REDIS_PORT=6379
 GOOGLE_CLOUD_PROJECT=your-project-id
 GOOGLE_CREDENTIALS_PATH=/path/to/service-account.json
 
-# API Externe
+# External API
 EXTERNAL_API_URL=https://api.example.com/events
 EXTERNAL_API_TOKEN=your-api-token
 ```
 
-## Monitoring et Observabilité
+## Monitoring and Observability
 
-### Points de Contrôle
+### Control Points
 
-- **Health Check API** : `GET /health` - Statut global du système
-- **Métriques Détaillées** : `GET /metrics` - Prometheus format
-- **Logs Structurés** : JSON format avec correlation IDs
-- **Alerting** : Intégration Grafana pour seuils critiques
+- **Health Check API**: `GET /health` - Global system status
+- **Detailed Metrics**: `GET /metrics` - Prometheus format
+- **Structured Logs**: JSON format with correlation IDs
+- **Alerting**: Grafana integration for critical thresholds
 
-### Métriques Clés
+### Key Metrics
 
 ```python
-# Exemples de métriques collectées
+# Examples of collected metrics
 processed_events_total: 50000
 processing_latency_seconds: 0.023
 sink_errors_total{sink="redis"}: 2
 kafka_lag_seconds: 1.2
 ```
 
-## Tests et Validation
+## Testing and Validation
 
-### Suite de Tests
+### Test Suite
 
 ```bash
-# Tests unitaires
+# Unit tests
 pytest tests/unit/ -v --cov=src
 
-# Tests d'intégration
+# Integration tests
 pytest tests/integration/ -v
 
-# Tests de performance
+# Performance tests
 pytest tests/performance/ -v --benchmark-only
 ```
 
-### Validation Continue
+### Continuous Validation
 
-- **CI/CD Pipeline** : GitHub Actions avec validation automatique
-- **Quality Gates** : Coverage > 90%, pas de vulnérabilités critiques
-- **Load Testing** : Simulation de 2000+ événements/seconde
+- **CI/CD Pipeline**: GitHub Actions with automatic validation
+- **Quality Gates**: Coverage > 90%, no critical vulnerabilities
+- **Load Testing**: Simulation of 2000+ events/second
 
-## Documentation Complète
+## Complete Documentation
 
-### Guides Disponibles
+### Available Guides
 
-- **[README_AR.md](./README_AR.md)** : Documentation complète en arabe
-- **[DEMO.md](./DEMO.md)** : Guide de démonstration pas-à-pas
-- **[METRICS.md](./METRICS.md)** : Métriques détaillées et benchmarks
-- **[API.md](./docs/API.md)** : Documentation de l'API REST
+- **[README_AR.md](./README_AR.md)**: Complete documentation in Arabic
+- **[DEMO.md](./DEMO.md)**: Step-by-step demonstration guide
+- **[METRICS.md](./METRICS.md)**: Detailed metrics and benchmarks
+- **[API.md](./docs/API.md)**: REST API documentation
 
-### Architecture Détaillée
+### Detailed Architecture
 
-Pour une vue technique approfondie, consultez le dossier `docs/` qui contient :
+For an in-depth technical view, see the `docs/` folder containing:
 
-- Diagrammes d'architecture (format Mermaid)
-- Spécifications des interfaces
-- Procédures de déploiement en production
-- Guide de troubleshooting avancé
+- Architecture diagrams (Mermaid format)
+- Interface specifications
+- Production deployment procedures
+- Advanced troubleshooting guide
 
 ## Conclusion
 
-Cette solution démontre une maîtrise complète des technologies de streaming moderne avec :
+This solution demonstrates complete mastery of modern streaming technologies with:
 
-- **Architecture robuste** adaptée aux contraintes de production
-- **Code de qualité** avec tests complets et documentation exhaustive
-- **Performance optimisée** répondant aux exigences de latence strictes
-- **Monitoring intégré** pour une observabilité complète
+- **Robust architecture** adapted to production constraints
+- **Quality code** with comprehensive tests and exhaustive documentation
+- **Optimized performance** meeting strict latency requirements
+- **Integrated monitoring** for complete observability
 
-Le projet est prêt pour un déploiement en production et peut facilement évoluer pour supporter une charge accrue ou de nouvelles fonctionnalités.
+The project is ready for production deployment and can easily scale to support increased load or new features.
 
 ---
 
-**Contact :** Saif Eddine Chihani  
-**Repository :** [github.com/Saif-chihani/data-streaming-pipeline](https://github.com/Saif-chihani/data-streaming-pipeline)  
-**Date de Livraison :** 10 Août 2025
+**Contact:** Saif Eddine Chihani  
+**Repository:** [github.com/Saif-chihani/data-streaming-pipeline](https://github.com/Saif-chihani/data-streaming-pipeline)  
+**Delivery Date:** August 10, 2025
