@@ -1,6 +1,24 @@
-# Engagement Streaming Pipeline
+# 🚀 Engagement Streaming Pipeline
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://www.docker.com/)
+[![Kafka](https://img.shields.io/badge/kafka-streaming-orange.svg)](https://kafka.apache.org/)
 
 Un système de streaming en temps réel pour traiter les événements d'engagement utilisateur depuis PostgreSQL vers BigQuery, Redis et un système externe avec des transformations et enrichissements de données.
+
+> 📋 **Projet développé dans le cadre d'un test technique pour un poste d'ingénieur de données senior**
+
+## 🌟 Aperçu Rapide
+
+Ce projet implémente une architecture de streaming complète qui capture, transforme et distribue les événements d'engagement utilisateur en temps réel avec des garanties de performance strictes.
+
+**🎯 Objectifs atteints :**
+- ✅ Latence Redis < 5 secondes (requirement critique)
+- ✅ Traitement exactly-once avec Kafka
+- ✅ Fan-out vers 3 destinations simultanément
+- ✅ Architecture reproductible avec Docker
+- ✅ Capacité de backfill pour données historiques
 
 ## 🎯 Objectif
 
